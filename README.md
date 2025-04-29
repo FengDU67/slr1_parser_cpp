@@ -64,33 +64,90 @@ Parsing completed successfully!
 
 Syntax Tree:
 Program
-  FunctionDef (main)
-  (
-  Params
-  )
-  {
   Statements
-    DeclStmt
-    Type (int)
-    ID (x)
-    AssignStmt
-    ID (x)
-    =
-    Expr
-      NUMBER (10)
-    IfStmt
-    if
-    (
-    Expr
-      ID (x)
-      Op (>)
-      NUMBER (5)
-    )
-    {
+    Statement
+      DeclStmt
+        Type
+          int (int)
+        x (x)
+        ; (;)
     Statements
-      ...
-    }
-  }
+      Statement
+        AssignStmt
+          x (x)
+          = (=)
+          10 (10)
+          ; (;)
+      Statements
+        Statement
+          DeclStmt
+            Type
+              float (float)
+            y (y)
+            ; (;)
+        Statements
+          Statement
+            AssignStmt
+              y (y)
+              = (=)
+              3.14 (3.14)
+              ; (;)
+          Statements
+            StmtList
+              Statement
+                IfStmt
+                  if (if)
+                  ( (()
+                  Expr
+                    x (x)
+                    OPERATOR
+                      > (>)
+                    5 (5)
+                  ) ())
+                  { ({)
+                  Statements
+                    StmtList
+                      Statement
+                        Compute
+                          y (y)
+                          = (=)
+                          Expr
+                            y (y)
+                            OPERATOR
+                              + (+)
+                            1.0 (1.0)
+                          ; (;)
+                  } (})
+                  ElsePart
+                    else (else)
+                    { ({)
+                    Statements
+                      StmtList
+                        Statement
+                          WhileStmt
+                            while (while)
+                            ( (()
+                            Expr
+                              y (y)
+                              OPERATOR
+                                < (<)
+                              10.0 (10.0)
+                            ) ())
+                            { ({)
+                            Statements
+                              StmtList
+                                Statement
+                                  Compute
+                                    y (y)
+                                    = (=)
+                                    Expr
+                                      y (y)
+                                      OPERATOR
+                                        * (*)
+                                      2.0 (2.0)
+                                    ; (;)
+                            } (})
+                    } (})
 ```
 
 
