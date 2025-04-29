@@ -40,30 +40,30 @@ private:
             
             
             // DeclStmt产生式
-            {"DeclStmt", {"Type", "IDENTIFIER", "SEMICOLON"}, 9},
+            {"DeclStmt", {"Type", "IDENTIFIER", ";"}, 9},
             
             // AssignStmt产生式
-            {"AssignStmt", {"IDENTIFIER", "ASSIGNMENT", "NUMBER", "SEMICOLON"}, 10},
+            {"AssignStmt", {"IDENTIFIER", "=", "NUMBER", ";"}, 10},
 
-            {"Compute", {"IDENTIFIER", "ASSIGNMENT", "Expr", "SEMICOLON"}, 11},
+            {"Compute", {"IDENTIFIER", "=", "Expr", ";"}, 11},
             
             // IfStmt产生式
-            {"IfStmt", {"IF", "LEFT_PAREN", "Expr", "RIGHT_PAREN", "LEFT_BRACE", "Statements", "RIGHT_BRACE", "ElsePart"}, 12},
-            {"ElsePart", {"ELSE", "LEFT_BRACE", "Statements", "RIGHT_BRACE"}, 13},
+            {"IfStmt", {"if", "(", "Expr", ")", "{", "Statements", "}", "ElsePart"}, 12},
+            {"ElsePart", {"else", "{", "Statements", "}"}, 13},
             {"ElsePart", {"ε"}, 14}, 
             
             // WhileStmt产生式
-            {"WhileStmt", {"WHILE", "LEFT_PAREN", "Expr", "RIGHT_PAREN", "LEFT_BRACE", "Statements", "RIGHT_BRACE"}, 15},
+            {"WhileStmt", {"while", "(", "Expr", ")", "{", "Statements", "}"}, 15},
             
             // 表达式处理
             {"Expr", {"IDENTIFIER", "OPERATOR", "NUMBER"}, 16},
 
             
             // OPERATOR → "+" | "-" | "*" | "/" | "==" | "!=" | "<" | ">" | "<=" | ">="
-            {"OPERATOR", {"PLUS"}, 17},
-            {"OPERATOR", {"MUL"}, 18},
-            {"OPERATOR", {"LT"}, 19},
-            {"OPERATOR", {"GT"}, 20},
+            {"OPERATOR", {"+"}, 17},
+            {"OPERATOR", {"*"}, 18},
+            {"OPERATOR", {"<"}, 19},
+            {"OPERATOR", {">"}, 20},
 
             
             // 类型声明
@@ -72,10 +72,9 @@ private:
             {"Type", {"bool"}, 23},
             
             // 语句块处理
-            {"Statements", {"StmtList"}, 24},  
-            {"Statements", {"ε"}, 25},         
-            {"StmtList", {"Statement"}, 26},
-            {"StmtList", {"Statement", "StmtList"}, 27}
+            {"Statements", {"StmtList"}, 24},        
+            {"StmtList", {"Statement"}, 25},
+            {"StmtList", {"Statement", "StmtList"}, 26}
         };
     }
     
@@ -102,9 +101,9 @@ private:
     // 获取终结符集合
     unordered_set<string> getTerminals() const {
         return {
-            "IDENTIFIER", "LEFT_PAREN", "RIGHT_PAREN", "LEFT_BRACE",
-            "RIGHT_BRACE", "SEMICOLON", "ASSIGNMENT", "IF", "ELSE", "WHILE",
-            "PLUS", "MUL", "LT", "GT", "int", "float", "bool", "NUMBER", "$"
+            "IDENTIFIER", "(", ")", "{",
+            "}", ";", "=", "if", "else", "while",
+            "+", "*", "<", ">", "int", "float", "bool", "NUMBER", "$"
         };
     }
 
@@ -202,43 +201,18 @@ private:
     // 在SyntaxParser类中添加以下成员函数
     string tokenTypeToTerminal(const Token& token) const {
         switch (token.type) {
-            // 类型关键字映射（int -> "int"）
-            case TokenType::TYPE: 
-                return token.value;  // 直接返回"int"/"float"等字符串
 
-            // 标识符统一映射
-            case TokenType::IDENTIFIER:
-                return "IDENTIFIER";
-
-            // 控制关键字映射到对应终结符
-            case TokenType::IF:       return "IF";
-            case TokenType::ELSE:     return "ELSE";
-            case TokenType::WHILE:    return "WHILE";
-            case TokenType::FOR:      return "FOR";
+            // 关键字映射
+            case TokenType::KEYWORD:      return token.value;
 
             // 运算符映射到文法定义名称
-            case TokenType::OPERATOR: {
-                static const unordered_map<string, string> opMap = {
-                    {"+", "PLUS"}, {"-", "MINUS"}, {"*", "MUL"}, {"/", "DIV"},
-                    {"=", "ASSIGN"}, {"==", "EQ"}, {"!=", "NEQ"}, {"<", "LT"},
-                    {"<=", "LEQ"}, {">", "GT"}, {">=", "GEQ"}, {"&&", "AND"},
-                    {"||", "OR"}, {"!", "NOT"}, {"++", "INC"}, {"--", "DEC"},
-                    {"+=", "ADD_ASSIGN"}, {"-=", "SUB_ASSIGN"}, {"*=", "MUL_ASSIGN"}, {"/=", "DIV_ASSIGN"}
-                };
-                auto it = opMap.find(token.value);
-                return (it != opMap.end()) ? it->second : "UNKNOWN_OP";
-            }
-            case TokenType::ASSIGNMENT: return "ASSIGNMENT";
+            case TokenType::OPERATOR:     return token.value;
 
             // 分隔符映射
-            case TokenType::LEFT_PAREN:   return "LEFT_PAREN";
-            case TokenType::RIGHT_PAREN:  return "RIGHT_PAREN";
-            case TokenType::LEFT_BRACE:   return "LEFT_BRACE";
-            case TokenType::RIGHT_BRACE:  return "RIGHT_BRACE";
-            case TokenType::SEMICOLON:    return "SEMICOLON";
-            case TokenType::COMMA:        return "COMMA";
+            case TokenType::DELIMITER:    return token.value;
 
             // 字面量和特殊符号
+            case TokenType::IDENTIFIER:   return "IDENTIFIER";
             case TokenType::NUMBER:       return "NUMBER";
             case TokenType::STRING:       return "STRING";
             case TokenType::$:            return "$";

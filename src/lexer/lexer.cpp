@@ -8,7 +8,6 @@ using namespace std;
 
 // 定义词法单元类型
 enum TokenType {
-    TYPE,       // 类型关键字（int/float/bool）
     KEYWORD,    // 关键字
     IDENTIFIER, // 标识符
     NUMBER,     // 数字
@@ -16,17 +15,6 @@ enum TokenType {
     DELIMITER,  // 分隔符
     STRING,     // 字符串
     COMMENT,    // 注释
-    LEFT_PAREN,   // (
-    RIGHT_PAREN,  // )
-    LEFT_BRACE,   // {
-    RIGHT_BRACE,  // }
-    SEMICOLON,    // ;
-    COMMA,        // ,
-    ASSIGNMENT, // 赋值运算符 =
-    IF,         // if 关键字
-    ELSE,       // else 关键字
-    WHILE,      // while 关键字
-    FOR,        // for 关键字
     $,         // 结束符
     UNKNOWN     // 未知
 };
@@ -56,22 +44,18 @@ private:
     size_t pos;
     size_t line;
 
-    // 关键字集合
-    const unordered_map<string, TokenType> typeKeywords = {
-        {"int", TYPE}, {"float", TYPE}, {"double", TYPE},
-        {"char", TYPE}, {"void", TYPE}, {"bool", TYPE}
-    };
-
-    const unordered_map<string, TokenType> controlKeywords = {
-        {"if", IF}, {"else", ELSE}, {"while", WHILE},
-        {"for", FOR}, {"return", KEYWORD}, {"class", KEYWORD},
+    const unordered_map<string, TokenType> Keywords = {
+        {"int", KEYWORD}, {"float", KEYWORD}, {"double", KEYWORD},
+        {"char", KEYWORD}, {"void", KEYWORD}, {"bool", KEYWORD},
+        {"if", KEYWORD}, {"else", KEYWORD}, {"while", KEYWORD},
+        {"for", KEYWORD}, {"return", KEYWORD}, {"class", KEYWORD},
         {"struct", KEYWORD}, {"true", KEYWORD}, {"false", KEYWORD}
     };
 
     // 运算符集合
     const unordered_map<string, TokenType> operators = {
         {"+", OPERATOR}, {"-", OPERATOR}, {"*", OPERATOR}, {"/", OPERATOR},
-        {"=", ASSIGNMENT}, {"==", OPERATOR}, {"!=", OPERATOR}, {"<", OPERATOR},
+        {"=", OPERATOR}, {"==", OPERATOR}, {"!=", OPERATOR}, {"<", OPERATOR},
         {"<=", OPERATOR}, {">", OPERATOR}, {">=", OPERATOR}, {"&&", OPERATOR},
         {"||", OPERATOR}, {"!", OPERATOR}, {"++", OPERATOR}, {"--", OPERATOR},
         {"+=", OPERATOR}, {"-=", OPERATOR}, {"*=", OPERATOR}, {"/=", OPERATOR}
@@ -79,8 +63,8 @@ private:
 
     // 分隔符集合
     const unordered_map<string, TokenType> delimiters = {
-        {"(", LEFT_PAREN}, {")", RIGHT_PAREN}, {"{", LEFT_BRACE}, {"}", RIGHT_BRACE},
-        {"[", DELIMITER}, {"]", DELIMITER}, {";", SEMICOLON}, {",", COMMA},
+        {"(", DELIMITER}, {")", DELIMITER}, {"{", DELIMITER}, {"}", DELIMITER},
+        {"[", DELIMITER}, {"]", DELIMITER}, {";", DELIMITER}, {",", DELIMITER},
         {".", DELIMITER}, {":", DELIMITER}, {"::", DELIMITER}
     };
 
@@ -142,14 +126,10 @@ private:
             }
         }
 
-        // 优先检查类型关键字
-        if (typeKeywords.find(value) != typeKeywords.end()) {
-            return {TYPE, value, line};
-        }
-        // 再检查控制流等其他关键字
-        else if (controlKeywords.find(value) != controlKeywords.end()) {
-            auto it = controlKeywords.find(value);
-            if (it != controlKeywords.end()) {
+        // 检查关键字
+        if (Keywords.find(value) != Keywords.end()) {
+            auto it = Keywords.find(value);
+            if (it != Keywords.end()) {
                 return {it->second, value, line};
             }
         }
@@ -313,7 +293,6 @@ inline void printTokens(const vector<Token>& tokens) {
     for (const auto& token : tokens) {
         string typeStr;
         switch (token.type) {
-            case TYPE: typeStr = "TYPE"; break;
             case KEYWORD: typeStr = "KEYWORD"; break;
             case IDENTIFIER: typeStr = "IDENTIFIER"; break;
             case NUMBER: typeStr = "NUMBER"; break;
@@ -321,17 +300,6 @@ inline void printTokens(const vector<Token>& tokens) {
             case DELIMITER: typeStr = "DELIMITER"; break;
             case STRING: typeStr = "STRING"; break;
             case COMMENT: typeStr = "COMMENT"; break;
-            case LEFT_PAREN: typeStr = "LEFT_PAREN"; break;
-            case RIGHT_PAREN: typeStr = "RIGHT_PAREN"; break;
-            case LEFT_BRACE: typeStr = "LEFT_BRACE"; break;
-            case RIGHT_BRACE: typeStr = "RIGHT_BRACE"; break;
-            case SEMICOLON: typeStr = "SEMICOLON"; break;
-            case COMMA: typeStr = "COMMA"; break;
-            case ASSIGNMENT: typeStr = "ASSIGNMENT"; break;
-            case IF: typeStr = "IF"; break;
-            case ELSE: typeStr = "ELSE"; break;
-            case WHILE: typeStr = "WHILE"; break;
-            case FOR: typeStr = "FOR"; break;
             case UNKNOWN: typeStr = "UNKNOWN"; break;
         }
         cout << "[" << typeStr << ": " << token.value << "] (Line " << token.line << ")" << endl;
