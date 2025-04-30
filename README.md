@@ -33,7 +33,7 @@ compiler_cpp/
 - CMake（版本 >= 3.10）
 - C++编译器（支持C++17标准）
 
-### 2. 构建项目
+### 2. 构建项目(linux)
 
 在项目根目录下运行以下命令：
 
@@ -41,7 +41,7 @@ compiler_cpp/
 mkdir build
 cd build
 cmake ..
-cmake --build . --config Release --clean-first
+cmake --build .
 ```
 
 ### 3. 运行程序
@@ -49,7 +49,6 @@ cmake --build . --config Release --clean-first
 构建完成后，运行生成的可执行文件：
 
 ```bash
-cd Release
 ./compiler
 ```
 
