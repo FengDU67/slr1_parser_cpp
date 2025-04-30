@@ -59,7 +59,7 @@ private:
             {"Expr", {"IDENTIFIER", "OPERATOR", "NUMBER"}, 16},
 
             
-            // OPERATOR → "+" | "-" | "*" | "/" | "==" | "!=" | "<" | ">" | "<=" | ">="
+            // OPERATOR
             {"OPERATOR", {"+"}, 17},
             {"OPERATOR", {"*"}, 18},
             {"OPERATOR", {"<"}, 19},
@@ -101,9 +101,22 @@ private:
     // 获取终结符集合
     unordered_set<string> getTerminals() const {
         return {
-            "IDENTIFIER", "(", ")", "{",
-            "}", ";", "=", "if", "else", "while",
-            "+", "*", "<", ">", "int", "float", "bool", "NUMBER", "$"
+            // 标识符和字面量
+            "IDENTIFIER", "NUMBER", "STRING", "$",
+            
+            // 运算符和分隔符
+            "=", "+", "-", "*", "/", 
+            "==", "!=", "<", ">", "<=", ">=", // 比较运算符
+            "&&", "||", "!",                  // 逻辑运算符
+            "++", "--",                       // 自增自减
+            "+=", "-=", "*=", "/=",           // 复合赋值
+            "(", ")", "{", "}", "[", "]",     // 括号类
+            ";", ",",                         // 语句分隔符
+            
+            // 关键字
+            "if", "else", "while", "return","for",
+            "int", "float", "bool", "double", "void",
+            "true", "false"
         };
     }
 
